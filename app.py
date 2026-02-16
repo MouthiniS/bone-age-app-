@@ -8,6 +8,8 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 from datetime import datetime
+import urllib.request
+import os
 
 st.set_page_config(page_title="Bone Age Assessment AI", page_icon="🦴", layout="wide")
 
@@ -27,30 +29,27 @@ class BoneAgeModel(nn.Module):
 
 @st.cache_resource
 def load_model():
-    import gdown
-    import os
-    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = BoneAgeModel().to(device)
     
     try:
-        # YOUR FILE ID FROM GOOGLE DRIVE (replace this!)
+        # REPLACE THIS WITH YOUR GOOGLE DRIVE FILE ID
         file_id = "1iNlhLZvoIOKuwDDa7cWSyj_alc7ZBhvd"
         model_path = "bone_age_model_final.pth"
         
-        # Download from Google Drive if not already downloaded
+        # Download from Google Drive if not already present
         if not os.path.exists(model_path):
             st.info("📥 Downloading model from Google Drive...")
-            url = f"https://drive.google.com/uc?id={file_id}"
-            gdown.download(url, model_path, quiet=False)
+            url = f"https://drive.google.com/uc?id={file_id}&export=download"
+            urllib.request.urlretrieve(url, model_path)
             st.success("✅ Model downloaded!")
         
-        # Load the model
+        # Load the trained model
         model.load_state_dict(torch.load(model_path, map_location=device))
         st.success("✅ Trained model loaded from Google Drive!")
         
     except Exception as e:
-        st.warning(f"⚠️ Could not load model: {e}")
+        st.warning(f"⚠️ Could not load model: {str(e)}")
         st.info("ℹ️ Using initialized model (predictions will be approximate)")
     
     model.eval()
@@ -167,5 +166,4 @@ with st.expander("📖 About This Project"):
     - **Growth Classes**: Delayed (<120m), Normal (120-180m), Advanced (>180m)
     
     **Disclaimer**: For educational purposes only. Not for clinical diagnosis.
-
     """)
