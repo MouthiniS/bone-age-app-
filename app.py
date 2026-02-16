@@ -29,11 +29,14 @@ class BoneAgeModel(nn.Module):
 def load_model():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = BoneAgeModel().to(device)
+    
+    # Try to load trained weights, but don't fail if they don't exist
     try:
         model.load_state_dict(torch.load("bone_age_model_final.pth", map_location=device))
         st.success("✅ Trained model loaded!")
-    except FileNotFoundError:
-        st.info("ℹ️ Using initialized model (predictions will be approximate)")
+    except:
+        st.info("ℹ️ Using initialized model (demo mode)")
+    
     model.eval()
     return model, device
 
