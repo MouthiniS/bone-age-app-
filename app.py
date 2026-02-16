@@ -27,13 +27,32 @@ class BoneAgeModel(nn.Module):
 
 @st.cache_resource
 def load_model():
+    import gdown
+    import os
+    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = BoneAgeModel().to(device)
+    
     try:
-        model.load_state_dict(torch.load("bone_age_model_final.pth", map_location=device))
-        st.success("✅ Trained model loaded!")
-    except FileNotFoundError:
+        # YOUR FILE ID FROM GOOGLE DRIVE (replace this!)
+        file_id = "1iNlhLZvoIOKuwDDa7cWSyj_alc7ZBhvd"
+        model_path = "bone_age_model_final.pth"
+        
+        # Download from Google Drive if not already downloaded
+        if not os.path.exists(model_path):
+            st.info("📥 Downloading model from Google Drive...")
+            url = f"https://drive.google.com/uc?id={file_id}"
+            gdown.download(url, model_path, quiet=False)
+            st.success("✅ Model downloaded!")
+        
+        # Load the model
+        model.load_state_dict(torch.load(model_path, map_location=device))
+        st.success("✅ Trained model loaded from Google Drive!")
+        
+    except Exception as e:
+        st.warning(f"⚠️ Could not load model: {e}")
         st.info("ℹ️ Using initialized model (predictions will be approximate)")
+    
     model.eval()
     return model, device
 
@@ -148,4 +167,5 @@ with st.expander("📖 About This Project"):
     - **Growth Classes**: Delayed (<120m), Normal (120-180m), Advanced (>180m)
     
     **Disclaimer**: For educational purposes only. Not for clinical diagnosis.
+
     """)
