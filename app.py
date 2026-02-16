@@ -148,5 +148,4 @@ with st.expander("📖 About This Project"):
     - **Growth Classes**: Delayed (<120m), Normal (120-180m), Advanced (>180m)
     
     **Disclaimer**: For educational purposes only. Not for clinical diagnosis.
-
     """)
