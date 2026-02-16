@@ -34,7 +34,7 @@ def load_model():
     
     try:
         # REPLACE THIS WITH YOUR GOOGLE DRIVE FILE ID
-        file_id = "1iNlhLZvoIOKuwDDa7cWSyj_alc7ZBhvd"
+        file_id = "1se7zSGZRa09JeIunW6aE6-KZ2iBli4C"
         model_path = "bone_age_model_final.pth"
         
         # Download from Google Drive if not already present
@@ -167,3 +167,4 @@ with st.expander("📖 About This Project"):
     
     **Disclaimer**: For educational purposes only. Not for clinical diagnosis.
     """)
+
